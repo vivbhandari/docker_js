@@ -1,0 +1,44 @@
+version: "3"
+services:
+  nginx:
+    image: nginx
+    tty: true
+    hostname: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    networks:
+      - mynet123
+  node_be:
+    image: vivekbhandari/node_be
+    tty: true
+    environment:
+      PG_USER: postgres
+      PG_HOST: postgres
+      PG_DB: test
+      PG_PWD: test
+      PG_PORT: 5432
+    hostname: node_be
+    networks:
+      - mynet123
+  react_fe:
+    image: vivekbhandari/react_fe
+    tty: true
+    hostname: react_fe
+    networks:
+      - mynet123
+  postgres:
+    image: postgres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: test
+      PGPASSWORD: test
+    hostname: postgres
+    networks:
+      - mynet123
+
+networks:
+  mynet123:
+    driver: bridge
